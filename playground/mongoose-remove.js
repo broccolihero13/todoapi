@@ -9,6 +9,11 @@ const {User} = require('./../server/models/user');
 // });
 
 // Remove one todo by it's ID
-Todo.findByIdAndRemove('5b04f020247d85540ad1bc2a').then((result)=>{
+// Todo.findByIdAndRemove('5b04f020247d85540ad1bc2a').then((result)=>{
+//   console.log(result);
+// });
+
+// find one todo and remove
+Todo.findOneAndRemove({text: "abc"}).then((result)=>{
   console.log(result);
 });
