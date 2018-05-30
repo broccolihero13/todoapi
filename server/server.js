@@ -77,7 +77,7 @@ app.patch('/todos/:todo_id', (req,res)=>{
 });
 
 app.post('/users', (req,res)=>{
-  let body = _.pick(req.body, ['email', 'password']);
+  let body = _.pick(req.body, ['username','email', 'password']);
   let user = new User(body);
   user.save().then((user_record)=>{
     res.send(user_record);
