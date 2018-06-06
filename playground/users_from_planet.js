@@ -1,5 +1,9 @@
 const axios = require('axios');
 
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 let data = {
   headers:{
     Authorization: `Bearer ${process.env.canvasTok}`
@@ -12,7 +16,7 @@ let getUsersFromCanvas = async ()=>{
     let dwellersOfPlanet = response.data.filter((user)=>{
       return user.sortable_name.toUpperCase().split(',')[0].indexOf('R') > -1;
     });
-    console.log(dwellersOfPlanet.length);
+    // console.log(dwellersOfPlanet.length);
     if(dwellersOfPlanet.length == 0){
       throw new Error();
     }
@@ -41,11 +45,18 @@ const visitedPlanets = async ()=>{
   return "done";
 };
 
-const add = async (a,b)=>a+b;
+const add = async ()=>{
+  let add2Plus2In2Seconds = ()=>{
+    return 2 + 2;
+  }
+  let result = await add2Plus2In2Seconds();
+  let delat = await timeout(2000);
+  return result;
+};
 
 const doWork = async ()=>{
   try {
-    const result = await add(12, 5);
+    const result = await add();
     return result;
   } catch (e) {
     return null;
