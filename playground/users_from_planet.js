@@ -41,21 +41,21 @@ const visitedPlanets = async ()=>{
   return "done";
 };
 
-visitedPlanets().then((arr)=>console.log(arr)).catch((err)=>console.log(err.message));
-
-const add = async (a,b)=>a+b+c;
+const add = async (a,b)=>a+b;
 
 const doWork = async ()=>{
   try {
-    const result = await add(12, 14);
+    const result = await add(12, 5);
     return result;
   } catch (e) {
     return null;
   }
 };
-
-doWork().then((number)=>{
-  console.log(number);
-}).catch((err)=>{
-  console.log('something went wrong');
-});
+visitedPlanets().then((arr)=>{
+  console.log(arr);
+  doWork().then((number)=>{
+    console.log(number);
+  }).catch((err)=>{
+    console.log('something went wrong');
+  });
+}).catch((err)=>console.log(err.message));
