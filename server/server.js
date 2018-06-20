@@ -34,11 +34,15 @@ app.get('/todos', authenticate, (req,res)=>{
   }).catch((err)=>res.status(400).send(err));
 })
 
-app.get(`/todos/:todo_id`, (req,res)=>{
-  if(!ObjectID.isValid(req.params.todo_id)){
+app.get(`/todos/:todo_id`, authenticate,(req,res)=>{
+  let id = req.params.todo_id;
+  if(!ObjectID.isValid(id)){
     res.status(404).send();
   }
-  Todo.findById(req.params.todo_id).then((todo)=>{
+  Todo.findOne({
+    _id: id,
+    _creator: req.user._id
+  }).then((todo)=>{
     if(todo){
       return res.send({todo});
     }
@@ -46,11 +50,15 @@ app.get(`/todos/:todo_id`, (req,res)=>{
   }).catch((err)=>res.status(400).send());
 });
 
-app.delete('/todos/:todo_id', (req,res)=>{
-  if(!ObjectID.isValid(req.params.todo_id)){
+app.delete('/todos/:todo_id',authenticate, (req,res)=>{
+  let id = req.params.todo_id
+  if(!ObjectID.isValid(id)){
     res.status(404).send();
   }
-  Todo.findByIdAndRemove(req.params.todo_id).then((todo)=>{
+  Todo.findOneAndRemove({
+    _id: id,
+    _creator: req.user._id
+  }).then((todo)=>{
     if(todo){
       return res.send({todo});
     }
@@ -58,8 +66,9 @@ app.delete('/todos/:todo_id', (req,res)=>{
   }).catch((err)=>res.status(400).send());
 });
 
-app.patch('/todos/:todo_id', (req,res)=>{
-  if(!ObjectID.isValid(req.params.todo_id)){
+app.patch('/todos/:todo_id', authenticate, (req,res)=>{
+  let id = req.params.todo_id;
+  if(!ObjectID.isValid(id)){
     res.status(404).send();
   }
   let newTodo = {
@@ -71,9 +80,14 @@ app.patch('/todos/:todo_id', (req,res)=>{
   if(req.body.status){
     newTodo.status = req.body.status;
   }
-  Todo.findByIdAndUpdate(req.params.todo_id,{
-    $set: newTodo
-  }, {new: true}).then((todo)=>{
+  Todo.findOneAndUpdate({
+    _id: id,
+    _creator: req.user._id
+  },{$set: newTodo}, {new: true}).then((todo)=>{
+    if(!todo){
+      return res.status(404).send();
+    }
+    
     res.send({todo});
   }).catch((err)=>res.status(400).send());
 });
